@@ -1,13 +1,23 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
 import { getImagesByQuery } from './js/pixabay-api';
-import { clearGallery, createGallery, showLoader } from './js/render-functions';
+import {
+  checkVisibleLoadBtn,
+  clearGallery,
+  createGallery,
+  hideLoader,
+  scrollAfterUpdate,
+  showLoader,
+  updateGallery,
+} from './js/render-functions';
 
 const formEl = document.querySelector('.form');
-const buttonEl = formEl.querySelector('button');
+const buttonEl = formEl.querySelector('.submit');
+const btnLdMrEl = document.querySelector('.load-more');
+
+let currentPage;
+let query;
 
 formEl.addEventListener('input', e => {
-  const query = e.currentTarget.elements['search-text'].value.trim();
+  query = e.currentTarget.elements['search-text'].value.trim();
   if (!query) {
     buttonEl.disabled = true;
   } else {
@@ -15,13 +25,36 @@ formEl.addEventListener('input', e => {
   }
 });
 
-formEl.addEventListener('submit', e => {
+formEl.addEventListener('submit', async e => {
   e.preventDefault();
-  const query = e.currentTarget.elements['search-text'].value.trim();
+  query = e.currentTarget.elements['search-text'].value.trim();
   if (e.currentTarget.nodeName == 'BUTTON') return;
   clearGallery();
   showLoader();
-  getImagesByQuery(query)
-    .then(images => createGallery(images))
-    .catch(error => console.error(error));
+  currentPage = 1;
+  try {
+    const images = await getImagesByQuery(query, currentPage);
+    hideLoader();
+    createGallery(images);
+  } catch (error) {
+    console.error(error);
+  }
+
+  checkVisibleLoadBtn(currentPage);
+  // e.target.reset();
+});
+
+btnLdMrEl.addEventListener('click', async e => {
+  currentPage += 1;
+  try {
+    const images = await getImagesByQuery(query, currentPage);
+    hideLoader();
+    updateGallery(images);
+  } catch (error) {
+    console.error(error);
+  }
+
+  scrollAfterUpdate();
+  checkVisibleLoadBtn(currentPage);
+  // e.target.reset();
 });
