@@ -7,6 +7,7 @@ import {
   scrollAfterUpdate,
   showLoader,
   updateGallery,
+  hideLoadMoreButton,
 } from './js/render-functions';
 
 const formEl = document.querySelector('.form');
@@ -30,31 +31,34 @@ formEl.addEventListener('submit', async e => {
   query = e.currentTarget.elements['search-text'].value.trim();
   if (e.currentTarget.nodeName == 'BUTTON') return;
   clearGallery();
-  showLoader();
+  hideLoadMoreButton();
   currentPage = 1;
+  showLoader(currentPage);
+
   try {
     const images = await getImagesByQuery(query, currentPage);
-    hideLoader();
+
     createGallery(images);
   } catch (error) {
     console.error(error);
   }
-
+  hideLoader();
   checkVisibleLoadBtn(currentPage);
-  // e.target.reset();
+  formEl.reset();
 });
 
 btnLdMrEl.addEventListener('click', async e => {
   currentPage += 1;
+  hideLoadMoreButton();
+  showLoader(currentPage);
   try {
     const images = await getImagesByQuery(query, currentPage);
-    hideLoader();
     updateGallery(images);
   } catch (error) {
     console.error(error);
   }
-
+  hideLoader();
   scrollAfterUpdate();
   checkVisibleLoadBtn(currentPage);
-  // e.target.reset();
+  formEl.reset();
 });

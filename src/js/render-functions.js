@@ -34,8 +34,11 @@ export function clearGallery() {
   ulElem.innerHTML = ``;
 }
 
-export function showLoader() {
+export function showLoader(currentPage) {
   spanEl.hidden = false;
+  if (currentPage > 1) {
+    spanEl.classList.add('load-more-loader');
+  }
 }
 
 export function hideLoader() {
@@ -72,7 +75,7 @@ function showLoadMoreButton() {
   btnLdMrEl.classList.add('is-visible');
 }
 
-function hideLoadMoreButton() {
+export function hideLoadMoreButton() {
   btnLdMrEl.classList.remove('is-visible');
 }
 
