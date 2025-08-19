@@ -9,6 +9,8 @@ import {
   updateGallery,
   hideLoadMoreButton,
 } from './js/render-functions';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 const formEl = document.querySelector('.form');
 const buttonEl = formEl.querySelector('.submit');
@@ -21,6 +23,13 @@ formEl.addEventListener('input', e => {
   query = e.currentTarget.elements['search-text'].value.trim();
   if (!query) {
     buttonEl.disabled = true;
+    iziToast.info({
+      message: 'Введіть запит',
+      color: 'red',
+      position: 'topRight',
+      messageColor: 'white',
+      titleColor: 'white',
+    });
   } else {
     buttonEl.disabled = false;
   }
@@ -29,7 +38,6 @@ formEl.addEventListener('input', e => {
 formEl.addEventListener('submit', async e => {
   e.preventDefault();
   query = e.currentTarget.elements['search-text'].value.trim();
-  if (e.currentTarget.nodeName == 'BUTTON') return;
   clearGallery();
   hideLoadMoreButton();
   currentPage = 1;
