@@ -36,6 +36,10 @@ export async function getImagesByQuery(query, page) {
   } catch (error) {
     iziToast.show({
       title: 'Error',
+      color: 'red',
+      position: 'topRight',
+      messageColor: 'white',
+      titleColor: 'white',
       message: error.message,
     });
   }

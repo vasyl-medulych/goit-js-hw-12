@@ -19,25 +19,23 @@ const btnLdMrEl = document.querySelector('.load-more');
 let currentPage;
 let query;
 
-formEl.addEventListener('input', e => {
+// formEl.addEventListener('input', e => {
+//   query = e.currentTarget.elements['search-text'].value.trim();
+
+// });
+
+formEl.addEventListener('submit', async e => {
+  e.preventDefault();
   query = e.currentTarget.elements['search-text'].value.trim();
   if (!query) {
-    buttonEl.disabled = true;
-    iziToast.info({
+    return iziToast.info({
       message: 'Введіть запит',
       color: 'red',
       position: 'topRight',
       messageColor: 'white',
       titleColor: 'white',
     });
-  } else {
-    buttonEl.disabled = false;
   }
-});
-
-formEl.addEventListener('submit', async e => {
-  e.preventDefault();
-  query = e.currentTarget.elements['search-text'].value.trim();
   clearGallery();
   hideLoadMoreButton();
   currentPage = 1;
@@ -46,7 +44,9 @@ formEl.addEventListener('submit', async e => {
   try {
     const images = await getImagesByQuery(query, currentPage);
 
-    createGallery(images);
+    if (images) {
+      createGallery(images);
+    }
   } catch (error) {
     console.error(error);
   }
