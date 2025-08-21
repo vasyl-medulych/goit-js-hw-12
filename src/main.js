@@ -13,7 +13,6 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const formEl = document.querySelector('.form');
-const buttonEl = formEl.querySelector('.submit');
 const btnLdMrEl = document.querySelector('.load-more');
 
 let currentPage;
@@ -39,15 +38,22 @@ formEl.addEventListener('submit', async e => {
   try {
     const images = await getImagesByQuery(query, currentPage);
 
-    if (images) {
+    if (images.length !== 0) {
       createGallery(images);
     }
   } catch (error) {
-    console.error(error);
+    iziToast.error({
+      message: error.message,
+      color: 'red',
+      position: 'topRight',
+      messageColor: 'white',
+      titleColor: 'white',
+    });
+  } finally {
+    hideLoader();
+    checkVisibleLoadBtn(currentPage);
+    formEl.reset();
   }
-  hideLoader();
-  checkVisibleLoadBtn(currentPage);
-  formEl.reset();
 });
 
 btnLdMrEl.addEventListener('click', async e => {
@@ -56,14 +62,14 @@ btnLdMrEl.addEventListener('click', async e => {
   showLoader(currentPage);
   try {
     const images = await getImagesByQuery(query, currentPage);
-    updateGallery(images);
+    if (images.length > 0) {
+      updateGallery(images);
+      scrollAfterUpdate();
+    }
   } catch (error) {
     console.error(error);
+  } finally {
+    hideLoader();
+    checkVisibleLoadBtn(currentPage);
   }
-  hideLoader();
-  if (images) {
-    scrollAfterUpdate();
-  }
-  checkVisibleLoadBtn(currentPage);
-  formEl.reset();
 });
