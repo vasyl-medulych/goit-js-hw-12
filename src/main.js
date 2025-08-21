@@ -19,11 +19,6 @@ const btnLdMrEl = document.querySelector('.load-more');
 let currentPage;
 let query;
 
-// formEl.addEventListener('input', e => {
-//   query = e.currentTarget.elements['search-text'].value.trim();
-
-// });
-
 formEl.addEventListener('submit', async e => {
   e.preventDefault();
   query = e.currentTarget.elements['search-text'].value.trim();
@@ -66,7 +61,9 @@ btnLdMrEl.addEventListener('click', async e => {
     console.error(error);
   }
   hideLoader();
-  scrollAfterUpdate();
+  if (images) {
+    scrollAfterUpdate();
+  }
   checkVisibleLoadBtn(currentPage);
   formEl.reset();
 });
