@@ -67,7 +67,13 @@ btnLdMrEl.addEventListener('click', async e => {
       scrollAfterUpdate();
     }
   } catch (error) {
-    console.error(error);
+    iziToast.error({
+      message: error.message,
+      color: 'red',
+      position: 'topRight',
+      messageColor: 'white',
+      titleColor: 'white',
+    });
   } finally {
     hideLoader();
     checkVisibleLoadBtn(currentPage);
