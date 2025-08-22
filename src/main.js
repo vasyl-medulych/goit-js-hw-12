@@ -33,9 +33,9 @@ formEl.addEventListener('submit', async e => {
   clearGallery();
   hideLoadMoreButton();
   currentPage = 1;
-  showLoader(currentPage);
 
   try {
+    showLoader(currentPage);
     const images = await getImagesByQuery(query, currentPage);
 
     if (images.length !== 0) {
@@ -49,18 +49,18 @@ formEl.addEventListener('submit', async e => {
       messageColor: 'white',
       titleColor: 'white',
     });
+    hideLoadMoreButton();
   } finally {
     hideLoader();
     checkVisibleLoadBtn(currentPage);
-    formEl.reset();
   }
 });
 
 btnLdMrEl.addEventListener('click', async e => {
   currentPage += 1;
   hideLoadMoreButton();
-  showLoader(currentPage);
   try {
+    showLoader(currentPage);
     const images = await getImagesByQuery(query, currentPage);
     if (images.length > 0) {
       updateGallery(images);
@@ -74,6 +74,7 @@ btnLdMrEl.addEventListener('click', async e => {
       messageColor: 'white',
       titleColor: 'white',
     });
+    hideLoadMoreButton();
   } finally {
     hideLoader();
     checkVisibleLoadBtn(currentPage);
